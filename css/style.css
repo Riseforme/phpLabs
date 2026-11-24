@@ -1,0 +1,506 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+/* ===== Переменные для игры (из style2.css) ===== */
+:root {
+    --white: #ffffff;
+    --bg: #f5f9ff;
+    --blue-50: #eaf3ff;
+    --blue-100: #d6e8ff;
+    --blue-500: #4a90e2;
+    --blue-600: #3a7bc8;
+    --green-50: #eaf8f0;
+    --green-100: #d3f0df;
+    --green-500: #3cb371;
+    --green-600: #2f9a5f;
+    --text: #23324a;
+    --muted: #6b7a90;
+    --red: #d9534f;
+    --radius: 14px;
+}
+
+button {
+    transition: all 0.5s ease;
+}
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box !important;
+}
+
+main {
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+#hashValue { user-select: all; }
+.verify, .history-card { user-select: text; }
+
+.container,
+.pop-up__container {
+    max-width: 1000px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+.container {
+    user-select: none;
+}
+.introduction {
+    color: #fff;
+    filter: progid:DXImageTransform.Microsoft.DropShadow(offX=3, offY=3, color=#ff4d4d, positive=true);
+    text-shadow:3px 3px 1px #5482ef;
+    -webkit-text-shadow:3px 3px 1px #5482ef;
+    -moz-text-shadow:3px 3px 1px #5482ef;
+}
+.logo {
+    text-align: center;
+    font-family: "Pacifico", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    color: #5482ef;
+}
+
+.title:hover,
+.cp-block:hover {
+    cursor: pointer;
+    border-width: 5px;
+}
+
+.sign-up {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.sign-up__title {
+    padding-bottom: 20px;
+}
+
+.sign-up form {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #fff;
+    border-left: 1px solid #fff;
+    padding: 20px;
+    gap: 20px;
+}
+
+.sign-up input {
+    padding: 15px 10px;
+    background-color: #000;
+    color: #fff;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    border-right: none;
+    border-left: none;
+}
+
+.sign-up input::placeholder {
+    color: #fff;
+}
+
+button {
+    width: fit-content;
+    padding: 10px;
+    margin-left: auto;
+    background-color: black;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 25px;
+}
+
+button:hover {
+    cursor: pointer;
+    color: #000;
+    background-color: #fff;
+}
+
+.close {
+    text-align: right;
+    display: block;
+    font-size: 19px;
+    padding-bottom: 20px;
+}
+
+.close:hover {
+    cursor: pointer;
+}
+
+.subtitle {
+    font-size: 19px;
+}
+
+
+/* =====================================================
+   Pop-up
+   ===================================================== */
+
+.pop-up {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    color: #5482ef;
+    font-family: Arial, Helvetica, sans-serif;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+
+    
+}
+
+.pop-up.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pop-up__container {
+    position: relative;               /* точка отсчёта для кнопки */
+    opacity: 0;
+    background-color: white;
+    padding: 30px;
+    
+    min-height: 50vh;
+    text-align: center;
+    box-shadow: 0px 0px 14px #5482ef;
+
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.pop-up.show .pop-up__container {
+    opacity: 1;
+    transform: none;
+}
+
+/* Внешний вид берётся из общего button, тут только положение */
+.pop-up__close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    margin-left: 0;
+    padding: 8px 16px;
+    font: inherit;
+    font-weight: bold;
+    background-color: white;
+    color: #5482ef;
+    font-weight: bold;
+    border: 2px solid #5482ef;
+}
+
+.pop-up__close:focus-visible {
+    color: #000;
+    background-color: #fff;
+}
+
+.pop-up__content {
+    padding-top: 56px;                /* чтобы текст не залезал под кнопку */
+}
+
+
+@media (max-width: 860px) {
+    .title {
+        font-size: 44px;
+    }
+}
+
+@media (max-width: 750px) {
+    .title {
+        font-size: 40px;
+        padding-top: 64px;
+    }
+    .sign-up {
+        width: auto;
+    }
+}
+
+@media (max-width: 550px) {
+    .title {
+        font-size: 32px;
+        padding-top: 12px;
+    }
+}
+
+
+/* =====================================================
+   Игра DICE (перенесено из style2.css)
+   ===================================================== */
+
+.header,
+.header *,
+.game,
+.game * {
+    box-sizing: border-box;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- Шапка ---------- */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 24px;
+    background: var(--white);
+    border-bottom: 1px solid var(--blue-100);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+}
+
+.auth-guest, .auth-user { display: flex; align-items: center; gap: 10px; }
+.user-name { font-weight: 600; }
+.balance {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--green-50);
+    color: var(--green-600);
+}
+
+/* ---------- Кнопки ---------- */
+/* .btn сбрасывает общие стили button (чёрный фон, рамка, margin-left: auto) */
+.btn {
+    width: auto;
+    margin-left: 0;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background .15s, opacity .15s;
+}
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary { background: var(--blue-500); color: var(--white); }
+.btn-primary:hover:not(:disabled) { background: var(--blue-600); color: var(--white); }
+.btn-ghost { background: var(--white); color: var(--blue-600); border-color: var(--blue-100); }
+.btn-ghost:hover:not(:disabled) { background: var(--blue-50); color: var(--blue-600); }
+.btn-big { flex: 1; padding: 16px; font-size: 18px; font-weight: 600; color: var(--white); }
+.btn-blue { background: var(--blue-500); }
+.btn-blue:hover:not(:disabled) { background: var(--blue-600); color: var(--white); }
+.btn-green { background: var(--green-500); }
+.btn-green:hover:not(:disabled) { background: var(--green-600); color: var(--white); }
+
+/* ---------- Карточка игры ---------- */
+/* отступы внутри контейнера, а не margin у .game:
+   иначе margin «проваливается» сквозь main и сверху видна белая полоса */
+.container:has(> .game) {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.game {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 24px;
+    background: var(--white);
+    color: var(--text);
+    border: 1px solid var(--blue-100);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 24px rgba(74, 144, 226, .08);
+}
+
+.lock {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, .75);
+    backdrop-filter: blur(3px);
+    text-align: center;
+    font-weight: 600;
+}
+.game.unlocked .lock { display: none; }
+
+.number-window {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 22px;
+    border-radius: var(--radius);
+    background: var(--blue-50);
+}
+.number-window span {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    font-variant-numeric: tabular-nums;
+}
+.number-window small { color: var(--muted); margin-top: 4px; }
+.number-window.win { background: var(--green-100); }
+.number-window.win span { color: var(--green-600); }
+.number-window.lose span { color: var(--red); }
+
+.hash-box {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border: 1px dashed var(--blue-100);
+    border-radius: 10px;
+}
+.hash-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+.hash-box code, .verify code {
+    display: block;
+    font-size: 12px;
+    word-break: break-all;
+    color: var(--text);
+}
+
+/* ---------- Поля ввода ---------- */
+.fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-top: 18px; }
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--muted); }
+.field input {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 12px;
+    font-size: 16px;
+    border: 1px solid var(--blue-100);
+    border-radius: 10px;
+    outline: none;
+}
+.field input:focus { border-color: var(--blue-500); }
+.field input.invalid { border-color: var(--red); }
+
+/* ---------- Диапазоны ---------- */
+.ranges { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 16px; }
+.range {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 6px;
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+}
+.range b { font-size: 15px; color: var(--text); }
+.range small { color: var(--muted); }
+.range-less { background: var(--blue-50); color: var(--blue-600); }
+.range-more { background: var(--green-50); color: var(--green-600); }
+.range-info { background: var(--bg); color: var(--muted); }
+
+.actions { display: flex; gap: 12px; margin-top: 18px; }
+
+/* ---------- Сообщение о результате ---------- */
+.message { min-height: 22px; margin: 14px 0 0; text-align: center; font-weight: 600; }
+.message.win { color: var(--green-600); }
+.message.lose, .message.error { color: var(--red); }
+
+/* ---------- Проверка прошлой игры ---------- */
+.verify {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--bg);
+    font-size: 14px;
+}
+.verify summary { cursor: pointer; color: var(--blue-600); }
+.verify dl { display: grid; grid-template-columns: 60px 1fr; gap: 6px 10px; }
+.verify dt { color: var(--muted); }
+.verify dd { margin: 0; }
+.hint { color: var(--muted); font-size: 13px; }
+#verifyResult { margin-left: 8px; font-weight: 600; }
+
+@media (max-width: 520px) {
+    .header { flex-direction: column; }
+    .ranges { grid-template-columns: 1fr; }
+    .number-window span { font-size: 40px; }
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.logo { text-decoration: none; }
+.public-section, .history-section { margin: 28px auto; max-width: 1000px; }
+.public-section h1, .history-section h2, .admin-container h1 { margin-bottom: 16px; }
+.content-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.content-card, .history-card {
+    padding: 18px;
+    background: var(--white);
+    border: 1px solid var(--blue-100);
+    border-radius: var(--radius);
+}
+.content-card h3, .history-card h3 { margin-bottom: 8px; color: var(--blue-600); }
+.content-card p, .history-card p { margin: 0 0 10px; line-height: 1.5; }
+.history-form { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(180px, 1fr) auto; align-items: end; gap: 12px; }
+.field select, .field textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 12px;
+    font: inherit;
+    border: 1px solid var(--blue-100);
+    border-radius: 10px;
+    background: white;
+}
+.field textarea { min-height: 100px; resize: vertical; }
+.game-history { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-top: 16px; }
+.history-card dl { display: grid; grid-template-columns: minmax(100px, auto) 1fr; gap: 7px 10px; }
+.history-card dt { color: var(--muted); }
+.history-card dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.history-card code { color: var(--text); font-size: 12px; word-break: break-all; }
+.history-verification { margin-left: 10px; font-weight: 600; }
+.admin-forms { padding-bottom: 50px; }
+.admin-forms details {
+    margin-top: 18px;
+    padding: 16px;
+    background: var(--white);
+    border: 1px solid var(--blue-100);
+    border-radius: var(--radius);
+}
+.admin-forms summary { cursor: pointer; font-weight: 700; color: var(--blue-600); }
+.admin-form { display: grid; gap: 12px; margin-top: 16px; }
+.form-actions { display: flex; gap: 8px; }
+.form-error { min-height: 20px; color: var(--red); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.admin-container { padding-top: 32px; padding-bottom: 48px; }
+.admin-tabs { display: flex; gap: 8px; margin: 18px 0; }
+.admin-table-wrap { overflow-x: auto; background: white; border: 1px solid var(--blue-100); border-radius: 10px; }
+.admin-table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.admin-table-wrap th, .admin-table-wrap td { padding: 9px; border-bottom: 1px solid var(--blue-100); text-align: left; }
+.admin-table-wrap td { max-width: 240px; overflow-wrap: anywhere; }
+.admin-table-wrap .btn { padding: 6px 9px; margin: 2px; }
+.btn-danger { background: #d9534f; color: white; }
+.btn-danger:hover { background: #b83d39; color: white; }
+.verified { color: var(--green-600); }
+.verification-error { color: var(--red); }
+
+@media (max-width: 680px) {
+    .history-form { grid-template-columns: 1fr; }
+    .header { padding: 14px; }
+    .auth-user { flex-wrap: wrap; justify-content: center; }
+}
+
+.pop-up__container { width: min(560px, calc(100% - 24px)); min-height: 0; max-height: 90vh; overflow-y: auto; }
+.pop-up__content { max-width: 430px; margin: 0 auto; }
+.modal-card { display: grid; gap: 14px; text-align: left; }
+.modal-card h2 { margin: 0 0 4px; color: var(--text); text-align: center; }
+.switch { margin-top: 16px; }
+.switch a { color: var(--blue-600); }
